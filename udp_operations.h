@@ -5,6 +5,6 @@
 
 int createUDPSocket();
 ssize_t sendToUDP(int udpSocket, char* msg, struct addrinfo* destAddr);
-ssize_t receiveFromUDP(int udpSocket);
+char* receiveFromUDP(int udpSocket, ssize_t *n, char* buffer);
 
 #endif //NETWORK_SIMULATION_UDP_OPERATIONS_H

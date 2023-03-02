@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <netdb.h>
 #include <string.h>
+#include <errno.h>
 #include "tcp_operations.h"
 
 int createTCPSocket(){
@@ -18,11 +19,11 @@ int initTCPServer(int tcpSocket, char* port){
     struct addrinfo hints, *res;
     int errcode;
 
-
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
+
 
     errcode = getaddrinfo(NULL, port, &hints, &res);
     if(errcode != 0){
@@ -31,17 +32,20 @@ int initTCPServer(int tcpSocket, char* port){
     }
 
     errcode = bind(tcpSocket, res->ai_addr, res->ai_addrlen);
-    if(errcode != 0){
+    if(errcode == -1){
         fprintf(stderr, "(bind) ERROR: %s\n", gai_strerror(errcode));
+        perror("ERR:");
         return errcode;
     }
 
     errcode = listen(tcpSocket, 100);
-    if(errcode != 0){
+    if(errcode == -1){
         fprintf(stderr, "(bind) ERROR: %s\n", gai_strerror(errcode));
         return errcode;
     }
 
+    freeaddrinfo(res);
 
+    return errcode;
 }
 

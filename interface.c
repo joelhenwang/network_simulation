@@ -49,6 +49,7 @@ void leaveCommand(int udpSocket, int tcpSocket, char* net, char* id, ssize_t* n,
 void printCommands(){
     printf("Input command:\n");
     printf("\t1. join\n");
+    printf("\t2. show NODES <net>\n");
     printf("\t2. exit\n");
     printf("\nInput:");
 }

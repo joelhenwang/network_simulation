@@ -2,6 +2,7 @@
 #include "operations.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/socket.h>
 
 int createUDPSocket(){
@@ -23,25 +24,24 @@ ssize_t sendToUDP(int udpSocket, char* msg, struct addrinfo* destAddr){
     if (n == -1){
         fprintf(stderr, "(sendto) ERROR: %s\n", gai_strerror(errcode));
     }
+    printf("Message sent: %s\n", msg);
 
     return n;
 }
 
-ssize_t receiveFromUDP(int udpSocket){
+char* receiveFromUDP(int udpSocket, ssize_t *n, char* buffer){
     struct sockaddr addr;
     socklen_t addrlen;
-    ssize_t n = -1;
-    char buffer[129];
     int errcode = -1;
 
     addrlen = sizeof(addr);
-    n = recvfrom(udpSocket, buffer, 128, 0, &addr, &addrlen);
-    if (n == -1){
+    *n = recvfrom(udpSocket, buffer, 128, 0, &addr, &addrlen);
+    if (*n == -1){
         fprintf(stderr, "(recvfrom) ERROR: %s\n", gai_strerror(errcode));
     } else {
-        buffer[n] = '\0';
-        printf("Message received: %s\n", buffer);
+        buffer[*n] = '\0';
+        printf("Message received:\n%s\n", buffer);
     }
 
-    return  n;
+    return  buffer;
 }
